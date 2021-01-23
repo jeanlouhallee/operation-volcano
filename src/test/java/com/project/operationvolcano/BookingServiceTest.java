@@ -2,7 +2,7 @@ package com.project.operationvolcano;
 
 import com.project.operationvolcano.booking.BookingService;
 import com.project.operationvolcano.booking.IBookingService;
-import com.project.operationvolcano.booking.ReservationRepository;
+import com.project.operationvolcano.booking.persistence.ReservationRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class BookingServiceTest {
 
         LocalDate baseDate = LocalDate.of(2020, 01, 01);
 
-        List<LocalDate> avaiableDates = subject.checkAvailabilities(Optional.of(baseDate), Optional.of(baseDate.plusDays(10)));
+        List<LocalDate> avaiableDates = subject.checkAvailabilities(baseDate, baseDate.plusDays(10));
         Assert.assertEquals(avaiableDates, baseDate.datesUntil(baseDate.plusDays(10)).collect(Collectors.toList()));
     }
 }

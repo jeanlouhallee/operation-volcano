@@ -1,5 +1,6 @@
-package com.project.operationvolcano.booking;
+package com.project.operationvolcano.booking.persistence;
 
+import com.project.operationvolcano.booking.persistence.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

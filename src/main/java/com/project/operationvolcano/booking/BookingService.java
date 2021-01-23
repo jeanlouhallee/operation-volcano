@@ -1,9 +1,13 @@
 package com.project.operationvolcano.booking;
 
+import com.project.operationvolcano.booking.api.model.ReservationDto;
+import com.project.operationvolcano.booking.persistence.ReservationRepository;
+import com.project.operationvolcano.booking.persistence.model.Reservation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -13,26 +17,27 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Service
-public class BookingService implements IBookingService{
+public class BookingService implements IBookingService {
 
-    final private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
     public BookingService(ReservationRepository reservationRepository){
         this.reservationRepository = reservationRepository;
     }
 
-    public List<LocalDate> checkAvailabilities(Optional<LocalDate> fromDate, Optional<LocalDate> untilDate){
+    public List<LocalDate> checkAvailabilities(LocalDate fromDate, LocalDate untilDate){
 
-        Stream<LocalDate> availableDates = fromDate.get().datesUntil(untilDate.get());
+        Stream<LocalDate> availableDates = fromDate.datesUntil(untilDate);
 
         return availableDates.collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public UUID makeReservation(ReservationDto reservation) {
 
-        return reservationRepository.save(new Reservation.ReservationBuilder()
+        return reservationRepository.save(Reservation.builder()
                 .checkIn(reservation.getCheckIn())
                 .checkOut(reservation.getCheckOut())
                 .firstName(reservation.getFirstName())
@@ -40,13 +45,20 @@ public class BookingService implements IBookingService{
                 .email(reservation.getEmail()).build()).getReservationId();
     }
 
+    @Transactional
     @Override
-    public UUID updateReservation(UUID reservationId, ReservationDto reservation) {
-        return null;
+    public void updateReservation(UUID reservationId, ReservationDto updatedReservation) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(RuntimeException::new);
+
+        reservation.setFirstName(updatedReservation.getFirstName());
+        reservation.setLastName(updatedReservation.getLastName());
+        reservation.setEmail(updatedReservation.getEmail());
+        reservation.setCheckIn(updatedReservation.getCheckIn());
+        reservation.setCheckOut(updatedReservation.getCheckOut());
     }
 
     @Override
     public void cancelReservation(UUID reservationId) {
-
+        this.reservationRepository.deleteById(reservationId);
     }
 }

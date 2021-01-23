@@ -1,6 +1,7 @@
-package com.project.operationvolcano.booking;
+package com.project.operationvolcano.booking.persistence.model;
 
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -28,9 +29,9 @@ public class Reservation {
     @Column
     private String email;
 
-    @Column
+    @Column(unique = true)
     private LocalDate checkIn;
 
-    @Column
+    @Column(unique = true)
     private LocalDate checkOut;
 }
