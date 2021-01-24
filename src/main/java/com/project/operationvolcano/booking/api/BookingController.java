@@ -1,14 +1,16 @@
 package com.project.operationvolcano.booking.api;
 
 import com.project.operationvolcano.booking.BookingService;
+import com.project.operationvolcano.booking.api.model.DateRangeDto;
+import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -27,24 +29,27 @@ class BookingController {
     }
 
     @GetMapping("/availabilities")
-    public ResponseEntity<List<LocalDate>> checkAvailabilities(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fromDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> untilDate){
-        log.info("checking availbility between {} and {}.", fromDate, untilDate);
+    public ResponseEntity<List<LocalDate>> checkAvailabilities(@RequestBody @Valid Optional<DateRangeDto> rangeOfDatesRequest){
+        log.info("checking availbility between for {}", rangeOfDatesRequest);
+
+        DateRangeDto rangeOfDates = rangeOfDatesRequest.orElse(
+                new DateRangeDto(
+                        LocalDate.now().plusDays(1),
+                        LocalDate.now().plusMonths(1)));
 
         List<LocalDate> availableDates = bookingService.checkAvailabilities(
-                fromDate.orElse(LocalDate.now().plusDays(1)),
-                untilDate.orElse(LocalDate.now().plusMonths(1)));
+                rangeOfDates.getFromDate(),
+                rangeOfDates.getUntilDate());
 
         return new ResponseEntity<>(availableDates, HttpStatus.OK);
     }
 
     @PostMapping("/reservation")
-    public ResponseEntity<UUID> makeReservation(@RequestBody ReservationDto reservation){
+    public ResponseEntity<ReservationConfirmationDto> makeReservation(@RequestBody ReservationDto reservation){
         log.info("making a new reservation for {}", reservation.getEmail());
 
-        UUID reservationId = bookingService.makeReservation(reservation);
-        return new ResponseEntity<>(reservationId, HttpStatus.CREATED);
+        ReservationConfirmationDto reservationConfirmation = bookingService.makeReservation(reservation);
+        return new ResponseEntity<>(reservationConfirmation, HttpStatus.CREATED);
     }
 
     @PutMapping("/reservation/{id}")

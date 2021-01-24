@@ -1,5 +1,6 @@
 package com.project.operationvolcano.booking;
 
+import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ public interface IBookingService {
 
     List<LocalDate> checkAvailabilities(LocalDate fromDate, LocalDate untilDate);
 
-    UUID makeReservation(ReservationDto reservation);
+    ReservationConfirmationDto makeReservation(ReservationDto reservation);
 
     void updateReservation(UUID reservationId, ReservationDto reservation);
 

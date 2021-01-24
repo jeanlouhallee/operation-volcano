@@ -1,5 +1,6 @@
 package com.project.operationvolcano.booking;
 
+import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
 import com.project.operationvolcano.booking.persistence.ReservationRepository;
 import com.project.operationvolcano.booking.persistence.model.Reservation;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,20 +29,21 @@ public class BookingService implements IBookingService {
     public List<LocalDate> checkAvailabilities(LocalDate fromDate, LocalDate untilDate){
 
         Stream<LocalDate> availableDates = fromDate.datesUntil(untilDate);
-
         return availableDates.collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public UUID makeReservation(ReservationDto reservation) {
+    public ReservationConfirmationDto makeReservation(ReservationDto reservation) {
 
-        return reservationRepository.save(Reservation.builder()
+        UUID reservationId = reservationRepository.save(Reservation.builder()
                 .checkIn(reservation.getCheckIn())
                 .checkOut(reservation.getCheckOut())
                 .firstName(reservation.getFirstName())
                 .lastName(reservation.getLastName())
                 .email(reservation.getEmail()).build()).getReservationId();
+
+        return new ReservationConfirmationDto(reservationId);
     }
 
     @Transactional
