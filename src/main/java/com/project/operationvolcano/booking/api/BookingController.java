@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,7 +46,7 @@ class BookingController {
     }
 
     @PostMapping("/reservation")
-    public ResponseEntity<ReservationConfirmationDto> makeReservation(@RequestBody ReservationDto reservation){
+    public ResponseEntity<ReservationConfirmationDto> makeReservation(@RequestBody @Valid ReservationDto reservation){
         log.info("making a new reservation for {}", reservation.getEmail());
 
         ReservationConfirmationDto reservationConfirmation = bookingService.makeReservation(reservation);

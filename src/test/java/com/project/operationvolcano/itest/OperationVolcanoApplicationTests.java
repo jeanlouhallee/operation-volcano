@@ -3,6 +3,7 @@ package com.project.operationvolcano.itest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.operationvolcano.booking.api.model.DateRangeDto;
 import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto;
+import com.project.operationvolcano.booking.api.model.ReservationDateRangeDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
@@ -57,7 +58,7 @@ class OperationVolcanoApplicationTests {
 		//then
 				.andExpect(status().is4xxClientError())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message")
-						.value("[Start date must be before end date.]"));
+						.value("[Start date must be before end date]"));
 	}
 
 	@Test
@@ -68,8 +69,7 @@ class OperationVolcanoApplicationTests {
 										.firstName("John")
 										.lastName("Smith")
 										.email("js@bloop.com")
-										.checkIn(LocalDate.now().plusDays(1))
-										.checkOut(LocalDate.now().plusDays(3))
+										.stayDates(new ReservationDateRangeDto(LocalDate.now().plusDays(1), LocalDate.now().plusDays(3)))
 										.build();
 
 		MvcResult result = mockMvc.perform(post(BOOKING_API + "/reservation")

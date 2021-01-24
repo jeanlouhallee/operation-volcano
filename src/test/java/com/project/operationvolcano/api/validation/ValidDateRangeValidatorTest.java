@@ -74,7 +74,8 @@ public class ValidDateRangeValidatorTest {
     @Test
     public void givenStartInThePast_whenValidating_thenReturnFalse(){
         mockValidatorContext();
-        DateRangeDto dateRange = new DateRangeDto(LocalDate.now().minusDays(1), LocalDate.now());
+        DateRangeDto dateRange = new DateRangeDto(LocalDate.of(2020, 02, 11),
+                LocalDate.of(2020, 02, 10));
 
         Assert.assertFalse(subject.isValid(dateRange, context));
     }

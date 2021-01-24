@@ -27,6 +27,7 @@ public class BookingControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
+        // TODO Need to extract more information for error message (fieldname)
         List<String> errors = ex.getBindingResult()
                 .getAllErrors()
                 .stream()

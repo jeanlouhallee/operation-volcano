@@ -1,21 +1,30 @@
 package com.project.operationvolcano.booking.api.model;
 
+import com.project.operationvolcano.booking.api.validators.ValidReservationDatesConstraint;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
+@Valid
 @Data
 @Builder
 public class ReservationDto {
 
+    @NotEmpty
     private String firstName;
 
+    @NotEmpty
     private String lastName;
 
+    @NotEmpty
     private String email;
 
-    private LocalDate checkIn;
-
-    private LocalDate checkOut;
+    @Valid
+    @NotNull
+    ReservationDateRangeDto stayDates;
 }

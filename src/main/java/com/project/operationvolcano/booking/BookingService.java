@@ -37,8 +37,8 @@ public class BookingService implements IBookingService {
     public ReservationConfirmationDto makeReservation(ReservationDto reservation) {
 
         UUID reservationId = reservationRepository.save(Reservation.builder()
-                .checkIn(reservation.getCheckIn())
-                .checkOut(reservation.getCheckOut())
+                .checkIn(reservation.getStayDates().getFromDate())
+                .checkOut(reservation.getStayDates().getUntilDate())
                 .firstName(reservation.getFirstName())
                 .lastName(reservation.getLastName())
                 .email(reservation.getEmail()).build()).getReservationId();
@@ -54,8 +54,8 @@ public class BookingService implements IBookingService {
         reservation.setFirstName(updatedReservation.getFirstName());
         reservation.setLastName(updatedReservation.getLastName());
         reservation.setEmail(updatedReservation.getEmail());
-        reservation.setCheckIn(updatedReservation.getCheckIn());
-        reservation.setCheckOut(updatedReservation.getCheckOut());
+        reservation.setCheckIn(updatedReservation.getStayDates().getFromDate());
+        reservation.setCheckOut(updatedReservation.getStayDates().getUntilDate());
     }
 
     @Override

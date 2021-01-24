@@ -30,13 +30,14 @@ public class ValidDateRangeValidator implements ConstraintValidator <ValidDateRa
         } else if(startDate != null) {
 
             if(!startDate.isBefore(endDate)) {
-                context.buildConstraintViolationWithTemplate("Start date must be before end date.")
+                context.buildConstraintViolationWithTemplate("Start date must be before end date")
                         .addConstraintViolation();
 
                 isValid = false;
             }
-            if(startDate.isBefore(LocalDate.now().plusDays(1))) {
-                context.buildConstraintViolationWithTemplate("Start date must be after today.")
+
+            if(!startDate.isAfter(LocalDate.now())) {
+                context.buildConstraintViolationWithTemplate("Start date must be after today")
                         .addConstraintViolation();
 
                 isValid = false;
