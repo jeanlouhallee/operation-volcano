@@ -14,7 +14,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Slf4j
 public class ValidReservationDatesValidator implements ConstraintValidator<ValidReservationDatesConstraint, ReservationDateRangeDto> {
 
-    private static final int MAX_NUMBER_OF_DAYS = 2;
+    private static final int MAX_NUMBER_OF_DAYS = 3;
     private static final int MAX_NUMBER_OF_MONTHS = 1;
 
     @Override

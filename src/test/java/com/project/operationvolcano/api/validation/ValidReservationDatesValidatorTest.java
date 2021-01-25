@@ -26,8 +26,8 @@ public class ValidReservationDatesValidatorTest {
     ConstraintValidatorContext context;
 
     @Test
-    public void givenValidDateRangewhenValidating_thenReturnTrue(){
-        ReservationDateRangeDto dateRange = new ReservationDateRangeDto(LocalDate.now().plusDays(2), LocalDate.now().plusDays(1));
+    public void givenValidDateRange_whenValidating_thenReturnTrue(){
+        ReservationDateRangeDto dateRange = new ReservationDateRangeDto(LocalDate.now().plusDays(1), LocalDate.now().plusDays(4));
 
         Assert.assertTrue(subject.isValid(dateRange, context));
     }
@@ -43,7 +43,7 @@ public class ValidReservationDatesValidatorTest {
     @Test
     public void givenExceededNumberOfDays_whenValidating_thenReturnFalse(){
         mockValidatorContext();
-        ReservationDateRangeDto dateRange = new ReservationDateRangeDto(LocalDate.now().plusDays(1), LocalDate.now().plusDays(4));
+        ReservationDateRangeDto dateRange = new ReservationDateRangeDto(LocalDate.now().plusDays(1), LocalDate.now().plusDays(5));
 
         Assert.assertFalse(subject.isValid(dateRange, context));
     }

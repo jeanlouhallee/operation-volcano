@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: operation-volcano
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
@@ -8,3 +10,10 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
