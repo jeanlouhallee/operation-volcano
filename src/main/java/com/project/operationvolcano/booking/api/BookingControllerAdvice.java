@@ -82,18 +82,4 @@ public class BookingControllerAdvice extends ResponseEntityExceptionHandler {
         log.info("Exception occured: {}", errorMsg);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorDto> handleException(Exception ex) {
-
-        String errorMsg = "These stay dates contain dates that are not available";
-        ApiErrorDto error = ApiErrorDto.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .timestamp(LocalDateTime.now())
-                .message(errorMsg).build();
-
-        log.info("Uncaught exception occured: {}", errorMsg);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
 }
