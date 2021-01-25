@@ -2,6 +2,7 @@ package com.project.operationvolcano.booking;
 
 import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
+import com.project.operationvolcano.booking.exceptions.InvalidDateRangeException;
 import com.project.operationvolcano.booking.exceptions.ReservationNotFoundException;
 import com.project.operationvolcano.booking.persistence.ReservationRepository;
 import com.project.operationvolcano.booking.persistence.model.Reservation;
@@ -30,7 +31,11 @@ public class BookingService implements IBookingService {
     @Transactional
     @Override
     public List<LocalDate> checkAvailabilities(LocalDate fromDate, LocalDate untilDate){
+        log.info("checkAvailabilities() {}, {}", fromDate, untilDate);
 
+        if(fromDate == null || untilDate == null) {
+            throw new InvalidDateRangeException("");
+        }
         List<LocalDate> availableDates = fromDate.datesUntil(untilDate.plusDays(1)).collect(Collectors.toList());
         List<Reservation> reservations = reservationRepository.findAllReservationsWithinDates(fromDate, untilDate);
 
@@ -44,6 +49,7 @@ public class BookingService implements IBookingService {
     @Transactional
     @Override
     public ReservationConfirmationDto makeReservation(ReservationDto reservation) {
+        log.info("makeReservation() {}", reservation);
 
         UUID reservationId = reservationRepository.save(Reservation.builder()
                 .checkIn(reservation.getStayDates().getFromDate())
@@ -58,6 +64,8 @@ public class BookingService implements IBookingService {
     @Transactional
     @Override
     public void updateReservation(UUID reservationId, ReservationDto updatedReservation) {
+        log.info("updateReservation() {}", updatedReservation);
+
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationNotFoundException::new);
 
@@ -71,6 +79,7 @@ public class BookingService implements IBookingService {
     @Transactional
     @Override
     public void cancelReservation(UUID reservationId) {
+        log.info("cancelReservation() {}", reservationId);
         try {
             this.reservationRepository.deleteById(reservationId);
         } catch (EmptyResultDataAccessException ex) {

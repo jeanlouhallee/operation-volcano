@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +21,9 @@ import java.util.UUID;
 @RequestMapping("/booking/v1")
 class BookingController {
 
+    private static final LocalDate DEFAULT_INITIAL_DATE = LocalDate.now().plusDays(1);
+    private static final LocalDate DEFAULT_MAX_DATE = LocalDate.now().plusMonths(1);
+
     private final BookingService bookingService;
 
     @Autowired
@@ -31,12 +33,12 @@ class BookingController {
 
     @GetMapping("/availabilities")
     public ResponseEntity<List<LocalDate>> checkAvailabilities(@RequestBody @Valid Optional<DateRangeDto> rangeOfDatesRequest){
-        log.info("checking availbility between for {}", rangeOfDatesRequest);
+        log.info("checkAvailabilities() {}", rangeOfDatesRequest);
 
-        DateRangeDto rangeOfDates = rangeOfDatesRequest.orElse(
-                new DateRangeDto(
-                        LocalDate.now().plusDays(1),
-                        LocalDate.now().plusMonths(1)));
+        DateRangeDto rangeOfDates = rangeOfDatesRequest.orElse(new DateRangeDto());
+
+        if(rangeOfDates.getFromDate() == null) rangeOfDates.setFromDate(DEFAULT_INITIAL_DATE);
+        if(rangeOfDates.getUntilDate() == null) rangeOfDates.setUntilDate(DEFAULT_MAX_DATE);
 
         List<LocalDate> availableDates = bookingService.checkAvailabilities(
                 rangeOfDates.getFromDate(),
@@ -47,7 +49,7 @@ class BookingController {
 
     @PostMapping("/reservation")
     public ResponseEntity<ReservationConfirmationDto> makeReservation(@RequestBody @Valid ReservationDto reservation){
-        log.info("making a new reservation for {}", reservation.getEmail());
+        log.info("makeReservation() {}", reservation);
 
         ReservationConfirmationDto reservationConfirmation = bookingService.makeReservation(reservation);
         return new ResponseEntity<>(reservationConfirmation, HttpStatus.CREATED);
@@ -55,12 +57,16 @@ class BookingController {
 
     @PutMapping("/reservation/{id}")
     public ResponseEntity<Void> updateReservation(@PathVariable("id") UUID reservationId, @RequestBody ReservationDto reservation){
+        log.info("updateReservation() {}", reservationId);
+
         bookingService.updateReservation(reservationId, reservation);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/reservation/{id}")
     public ResponseEntity<Void> cancelReservation(@PathVariable("id") UUID reservationId){
+        log.info("cancelReservation() {}", reservationId);
+
         bookingService.cancelReservation(reservationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

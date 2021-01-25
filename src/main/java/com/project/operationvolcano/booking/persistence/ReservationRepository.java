@@ -12,8 +12,7 @@ import java.util.UUID;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
 
-    //TODO update query
-    @Query("select u from Reservation u")
+    @Query("select r from Reservation r where r.checkIn >= checkIn and r.checkOut <= checkOut")
     List<Reservation> findAllReservationsWithinDates(LocalDate checkIn, LocalDate checkOut);
 
 }
