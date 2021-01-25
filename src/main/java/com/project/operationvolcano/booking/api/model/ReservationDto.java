@@ -1,10 +1,7 @@
 package com.project.operationvolcano.booking.api.model;
 
-import com.project.operationvolcano.booking.api.validators.ValidReservationDatesConstraint;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;

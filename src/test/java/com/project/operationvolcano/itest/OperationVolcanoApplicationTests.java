@@ -1,13 +1,17 @@
 package com.project.operationvolcano.itest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.operationvolcano.booking.IBookingService;
 import com.project.operationvolcano.booking.api.model.DateRangeDto;
 import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto;
 import com.project.operationvolcano.booking.api.model.ReservationDateRangeDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
+import com.project.operationvolcano.booking.exceptions.StayDatesNotAvailableException;
+import com.project.operationvolcano.booking.persistence.ReservationRepository;
 import org.junit.Assert;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@DisplayName("Operaction volcano integration tests")
+@DisplayName("Operation volcano integration tests")
 class OperationVolcanoApplicationTests {
 
 	private static final String APPLICATION_JSON = "application/json";
@@ -52,7 +56,7 @@ class OperationVolcanoApplicationTests {
 	}
 
 	@Test
-	void givenStartDateBeforeEndDate_whengettingAvailabilities_thenValidatorsAreTriggers() throws Exception {
+	void givenStartDateBeforeEndDate_whenGettingAvailabilities_thenValidatorsAreTriggers() throws Exception {
 
 		//given
 		DateRangeDto requestBody = new DateRangeDto(LocalDate.now().plusDays(11), LocalDate.now().plusDays(10));
@@ -121,4 +125,33 @@ class OperationVolcanoApplicationTests {
 
 	}
 
+	@Test
+	public void givenTwoOverlapingReservations_whenInsertingSecond_thenForbidOperation() throws Exception {
+		LocalDate startDate = LocalDate.of(2025,1,1);
+		LocalDate endDate = LocalDate.of(2025,1,4);
+		//given
+		ReservationDto reservation1 = ReservationDto.builder()
+				.firstName("Peter")
+				.lastName("Parker")
+				.email("spider@man.com")
+				.stayDates(new ReservationDateRangeDto(
+						startDate,
+						endDate))
+				.build();
+
+		bookingService.makeReservation(reservation1);
+
+		ReservationDto reservation2 = ReservationDto.builder()
+				.firstName("Tony")
+				.lastName("Stark")
+				.email("iron@man.com")
+				.stayDates(new ReservationDateRangeDto(
+						startDate.plusDays(1),
+						endDate.minusDays(1)))
+				.build();
+
+		Assertions.assertThrows(StayDatesNotAvailableException.class, () -> {
+			bookingService.makeReservation(reservation2);;
+		});
+	}
 }

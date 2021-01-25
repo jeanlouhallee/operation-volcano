@@ -1,12 +1,10 @@
 package com.project.operationvolcano.booking.api.validators;
 
-import com.project.operationvolcano.booking.api.model.DateRangeDto;
 import com.project.operationvolcano.booking.api.model.ReservationDateRangeDto;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.time.LocalDate;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -30,7 +28,7 @@ public class ValidReservationDatesValidator implements ConstraintValidator<Valid
         context.disableDefaultConstraintViolation();
 
         if(startDate == null || endDate == null) {
-            context.buildConstraintViolationWithTemplate("You must specify the starting date and end date of the stay")
+            context.buildConstraintViolationWithTemplate("") //Already treated in ValidDateRangeValidator
                     .addConstraintViolation();
 
             isValid = false;

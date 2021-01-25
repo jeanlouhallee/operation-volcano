@@ -1,7 +1,6 @@
 package com.project.operationvolcano.booking.persistence.model;
 
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,8 +11,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
 @Table(name = "reservations")
+@Entity
 public class Reservation {
 
     @Id

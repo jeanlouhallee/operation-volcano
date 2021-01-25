@@ -5,7 +5,7 @@ import com.project.operationvolcano.booking.api.validators.ValidReservationDates
 import java.time.LocalDate;
 
 @ValidReservationDatesConstraint
-public class ReservationDateRangeDto extends DateRangeDto{
+public class ReservationDateRangeDto extends DateRangeDto {
 
     public ReservationDateRangeDto(LocalDate fromDate, LocalDate untilDate) {
         super(fromDate, untilDate);

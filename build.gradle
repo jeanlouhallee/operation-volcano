@@ -22,8 +22,10 @@ dependencies {
 	compile "org.springframework.cloud:spring-cloud-starter-sleuth:2.2.6.RELEASE"
 	compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 	compile group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
+	compile group: 'org.mapstruct', name: 'mapstruct', version: '1.4.0.Final'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.0.Final'
 
 
 	// test dependencies

@@ -2,10 +2,10 @@ package com.project.operationvolcano.booking.api;
 
 import com.project.operationvolcano.booking.api.model.ApiErrorDto;
 import com.project.operationvolcano.booking.exceptions.ReservationNotFoundException;
+import com.project.operationvolcano.booking.exceptions.StayDatesNotAvailableException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,22 +34,66 @@ public class BookingControllerAdvice extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
+        String errorMsg = errors.toString();
         ApiErrorDto error = ApiErrorDto.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .timestamp(LocalDateTime.now())
-                .message(errors.toString()).build();
+                .message(errorMsg).build();
 
+        log.info("Exception occured: {}", errorMsg);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ReservationNotFoundException.class)
     public ResponseEntity<ApiErrorDto> handleReservationNotFoundException(ReservationNotFoundException ex) {
 
+        String errorMsg = ex.getMessage();
         ApiErrorDto error = ApiErrorDto.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .timestamp(LocalDateTime.now())
-                .message(ex.getMessage()).build();
+                .message(errorMsg).build();
 
+        log.info("Exception occured: {}", errorMsg);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiErrorDto> handleConstraintViolationException(ConstraintViolationException ex) {
+
+        String errorMsg = ex.getCause().getMessage();
+        ApiErrorDto error = ApiErrorDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .timestamp(LocalDateTime.now())
+                .message(errorMsg).build();
+
+        log.info("Exception occured: {}", errorMsg);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StayDatesNotAvailableException.class)
+    public ResponseEntity<ApiErrorDto> handleStayDatesNotAvailableException(StayDatesNotAvailableException ex) {
+
+        String errorMsg = "These stay dates contain dates that are not available";
+        ApiErrorDto error = ApiErrorDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .timestamp(LocalDateTime.now())
+                .message(errorMsg).build();
+
+        log.info("Exception occured: {}", errorMsg);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorDto> handleException(Exception ex) {
+
+        String errorMsg = "These stay dates contain dates that are not available";
+        ApiErrorDto error = ApiErrorDto.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .timestamp(LocalDateTime.now())
+                .message(errorMsg).build();
+
+        log.info("Uncaught exception occured: {}", errorMsg);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
 }
