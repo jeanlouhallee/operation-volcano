@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-// TODO create mapper for DTO to Entity
 @Slf4j
 @Service
 public class BookingService implements IBookingService {

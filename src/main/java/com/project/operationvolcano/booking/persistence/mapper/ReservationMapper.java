@@ -8,6 +8,7 @@ import org.mapstruct.*;
 public interface ReservationMapper {
 
     @Mappings({@Mapping(target="checkIn", source="dto.stayDates.fromDate"),
-            @Mapping(target="checkOut", source="dto.stayDates.untilDate")})
+            @Mapping(target="checkOut", source="dto.stayDates.untilDate"),
+            @Mapping(target="reservationId", ignore = true)})
     Reservation reservationDTOtoReservation(ReservationDto dto);
 }

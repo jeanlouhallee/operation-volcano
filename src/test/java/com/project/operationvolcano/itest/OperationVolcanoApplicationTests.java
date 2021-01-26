@@ -1,6 +1,5 @@
 package com.project.operationvolcano.itest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.operationvolcano.booking.IBookingService;
 import com.project.operationvolcano.booking.api.model.DateRangeDto;
@@ -8,7 +7,6 @@ import com.project.operationvolcano.booking.api.model.ReservationConfirmationDto
 import com.project.operationvolcano.booking.api.model.ReservationDateRangeDto;
 import com.project.operationvolcano.booking.api.model.ReservationDto;
 import com.project.operationvolcano.booking.exceptions.StayDatesNotAvailableException;
-import com.project.operationvolcano.booking.persistence.ReservationRepository;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
@@ -30,6 +28,7 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+//Refer to file db/inserts/V1.0.1__tests_inserts.sql for existing test data
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -129,6 +128,7 @@ class OperationVolcanoApplicationTests {
 	public void givenTwoOverlapingReservations_whenInsertingSecond_thenForbidOperation() throws Exception {
 		LocalDate startDate = LocalDate.of(2025,1,1);
 		LocalDate endDate = LocalDate.of(2025,1,4);
+
 		//given
 		ReservationDto reservation1 = ReservationDto.builder()
 				.firstName("Peter")

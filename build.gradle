@@ -19,6 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.5.2'
 	compile "org.springframework.cloud:spring-cloud-starter-sleuth:2.2.6.RELEASE"
 	compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 	compile group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
@@ -26,7 +27,6 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.0.Final'
-
 
 	// test dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -42,10 +42,6 @@ dependencies {
 
 test {
 	useJUnitPlatform()
-
-	if (!project.hasProperty('itest')){
-		exclude '**/itest/**'
-	}
 
 	testLogging {
 		events 'PASSED', 'FAILED', 'SKIPPED'
