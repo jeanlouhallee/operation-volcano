@@ -37,9 +37,9 @@ All good and ready!
 The microservice will be available at http://localhost:8080
 
 Note: If running your application in the IDE without docker, you need to set these environment variables to connect to your database:
-SPRING_DATASOURCE_URL
-SPRING_DATASOURCE_USERNAME
-SPRING_DATASOURCE_PASSWORD
+* SPRING_DATASOURCE_URL
+* SPRING_DATASOURCE_USERNAME
+* SPRING_DATASOURCE_PASSWORD
 
 ## Testing
 
