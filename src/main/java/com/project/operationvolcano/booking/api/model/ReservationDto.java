@@ -12,13 +12,13 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class ReservationDto {
 
-    @NotEmpty
+    @NotEmpty(message = "firstName cannot be empty")
     private String firstName;
 
-    @NotEmpty
+    @NotEmpty(message = "lastName cannot be empty")
     private String lastName;
 
-    @NotEmpty
+    @NotEmpty(message = "email cannot be empty")
     private String email;
 
     @Valid
